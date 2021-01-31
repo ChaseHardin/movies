@@ -1,25 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
+import service from './search/search-movies-service';
+import React, {useState, useEffect} from 'react';
+import {DebounceInput} from 'react-debounce-input';
 
 function App() {
+  const [movies, setMovies] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    const fetch = async () => {
+      if (searchTerm) {
+        const response = await service.searchMovies(searchTerm);
+        setMovies(response);
+      }
+    }
+    
+    fetch();
+  }, [searchTerm])
+
+  const handleOnSearch = (e) => setSearchTerm(e.target.value);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <DebounceInput
+          placeholder={'Search Movie'}
+          minLength={2}
+          debounceTimeout={300}
+          onChange={handleOnSearch} />
+
+      {movies.map(movie => <div key={movie.title}>{movie.title}</div>)}
     </div>
-  );
+  )
 }
 
 export default App;
