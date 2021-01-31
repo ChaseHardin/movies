@@ -1,4 +1,3 @@
-import './App.css';
 import service from './search/search-movies-service';
 import React, {useState, useEffect} from 'react';
 import {DebounceInput} from 'react-debounce-input';
